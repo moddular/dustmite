@@ -125,13 +125,19 @@ describe('lib/rules', function() {
 			assert.strictEqual(rules.helperMustNotBeUsed.type, '@');
 		});
 
-		it('Should callback if the name of the node is `if`', function() {
-			var callback = sinon.stub();
-			var node = {
-				name: sinon.stub().returns('if')
-			};
-			rules.helperMustNotBeUsed.test(callback, node);
-			assert.isTrue(callback.calledOnce, 'if helper must not be used');
+		it('Should callback if one of the nodes on the default blacklist is used', function() {
+			[
+				'if',
+				'default',
+				'idx'
+			].forEach(function(name) {
+				var callback = sinon.stub();
+				var node = {
+					name: sinon.stub().returns(name)
+				};
+				rules.helperMustNotBeUsed.test(callback, node);
+				assert.isTrue(callback.calledOnce, name + ' helper must not be used');
+			});
 		});
 
 		it('Should not callback for other names', function() {
