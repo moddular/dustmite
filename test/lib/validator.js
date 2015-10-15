@@ -6,6 +6,8 @@ var mockery = require('mockery');
 var path = require('path');
 var sinon = require('sinon');
 
+var createValidator = require(path.join(__dirname, '..', '..', 'lib', 'validator'));
+
 describe('lib/validator', function() {
 	var Validator;
 	var fs;
@@ -20,8 +22,7 @@ describe('lib/validator', function() {
 			warnOnReplace: false
 		});
 		mockery.registerMock('fs', fs);
-
-		Validator = require(path.join(__dirname, '..', '..', 'lib', 'validator'));
+		Validator = createValidator();
 	});
 	after(function() {
 		mockery.deregisterAll();

@@ -2,7 +2,7 @@
 
 'use strict';
 
-var Validator = require('../lib/validator');
+var Validator = require('../lib/validator')();
 
 var fs = require('fs');
 var path = require('path');

@@ -224,6 +224,35 @@ module.exports = [
 
 With this rule `{foo}`, `{foo|s}` and `{foo|s|html}` would be valid, while `{foo|html}` and `{foo|html|s}` would be invalid.
 
+## JavaScript API
+
+You can also run Dustmite from JavaScript code. The basic usage is as follows:
+
+```js
+var dustmite = require('dustmite');
+var Validator = dustmite();
+var validator = new Validator(files, rules);
+var status = validator.run(); // 0 if everything passes, 1 if there were failures
+console.log(validator.report());
+```
+
+`files` is an array containing the paths of the files to lint. `rules` is an object that maps the dust node types to arrays of their validation functions. e.g.
+
+```js
+{
+	'@': [
+		function(report, node) { ... },
+		function(report, node) { ... }
+	],
+	'reference': [
+		function(report, node) { ... }
+	],
+	...
+}
+```
+
+If you would like to replace the standard Dustmite reporter you can do so by passing a `Reporter` constructor to the `dustmite` function. Please see [lib/reporter.js](https://github.com/nature/dustmite/blob/master/lib/reporter.js) for the methods that a reporter needs to implement.
+
 ## Contributing
 
 Before opening a pull request please make sure you run all the tests. If you're developing new features or refactoring, make sure that your code is covered by unit tests. The `test` directory mirrors the directory structure of the main application so that it's clear where each test belongs.
