@@ -34,7 +34,7 @@ Dustmite comes packaged with a few default rules that can be configured by placi
 "referencesMustBeSnakeCase": true|false
 ```
 
-Validates that all references in your templates are writen in snake_case.
+Validates that all references in your templates are written in snake_case.
 
 ### `referencesMustBeCamelCase`
 
@@ -42,7 +42,7 @@ Validates that all references in your templates are writen in snake_case.
 "referencesMustBeCamelCase": true|false
 ```
 
-Validates that all references in your templates are writen in camelCase.
+Validates that all references in your templates are written in camelCase.
 
 ### `helpersMustBeSnakeCase`
 
@@ -50,7 +50,7 @@ Validates that all references in your templates are writen in camelCase.
 "helpersMustBeSnakeCase": true|false
 ```
 
-Validates that all helpers in your templates are writen in snake_case.
+Validates that all helpers in your templates are written in snake_case.
 
 ### `helpersMustBeCamelCase`
 
@@ -58,7 +58,7 @@ Validates that all helpers in your templates are writen in snake_case.
 "helpersMustBeCamelCase": true|false
 ```
 
-Validates that all helpers in your templates are writen in camelCase.
+Validates that all helpers in your templates are written in camelCase.
 
 ### `escapeCharactersMustBeValid`
 
