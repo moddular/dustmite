@@ -136,6 +136,8 @@ Putting these together, here's an example of a complete `.dustmiterc` file:
 }
 ```
 
+Dustmite will only run the default rules that are explicitly enabled in `.dustmiterc`.
+
 ## Custom rules
 
 In addtion to the default rules Dustmite allows you to provide a JavaScript file containing a list of custom rules to be applied for your project (using the `-r`/`--rules` option). This file should `module.exports` an array of rules objects.
