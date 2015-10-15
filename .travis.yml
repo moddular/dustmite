@@ -1,0 +1,38 @@
+
+# Build matrix
+language: node_js
+matrix:
+  include:
+
+    # Run tests in Node.js 0.10
+    - node_js: '0.10'
+
+    # Run tests in Node.js 0.12
+    - node_js: '0.12'
+
+    # Run tests in Node.js 4.x
+    - node_js: '4'
+
+
+# Restrict builds on branches
+branches:
+  only:
+    - master
+    - /^\d+\.\d+\.\d+$/
+
+
+env:
+  global:
+    - secure: "exg07L+Igj/cVDhuTDXsq2zWELswpd3g3osvjgEOEZc+bW+/MzG4CAxOY6yxH3h7/UQita0WkV6nF9X62vU7zTv7NOfCi3LaNGluGktgRuqGQsSWXNRZn0A0yn4hXADFROtxGpJfx97sc8fXJ7d7xADb3gCcglgGM59vgTq5ZYJSG48gO4JzX8Q0Ajbwe+Tq4Or6sjoR12MvGm8qEBMcpS8wC1XxijCA+ixZjJmaBAKBojmWBLgA88ZvxGgpBmd+As3Iw3TZu/o6NV7ptkULgNFwvQ8nM2uWsmVdwsm1iZm+9KYNRU4m4KCagyA3/wnq0w5sNZ+1dH3S7ms0erB95BfhHyEVxMNiYabi499IMfmeEcAKn2ejjNqInGkUIkk7iO19ZcVysCMS/b9+rsp4d+prBG/mLEl1DmcuRqXQLViAjtoI+e1BP9oNNYSrlx91FKZ4pnePB2FyGwIxmwF2qrxQ2/plpSHyT5wY8xH+Tzdw7+VeAIft8PBSKEPJT1zJMbL/5gXvo3r/U9+uV/hooXSeItM8lQzuKb6vX5H+i0eYeLTm3XXWKDji56gUE+Lz3KkFXipRSjhSq5KrgIU4IDF1i+SqOI0DcFUYcDD3N8UY26YoeQjvmNBIlZU0/qqY17PXrVxLnO9qICjPbW5jqI5EBVX81NwWPI9z0nyVDyw="
+
+
+after_success:
+  - 'if [[ -n "$TRAVIS_TAG" && "$TRAVIS_NODE_VERSION" == "0.12" ]]; then PUBLISH_PACKAGE=true; fi'
+  - 'echo "Tag: $TRAVIS_TAG" && echo "Node: $TRAVIS_NODE_VERSION" && echo "Publish? $PUBLISH_PACKAGE"'
+  - 'if [ $PUBLISH_PACKAGE ]; then npm pack; fi'
+  - 'if [ $PUBLISH_PACKAGE ]; then curl -F "package=@dustmite-$TRAVIS_TAG.tgz" https://$GEMFURY_HASH@push.fury.io/nature/; fi'
+
+
+# Build script
+script:
+  - make ci

@@ -1,0 +1,39 @@
+{
+	"name": "dustmite",
+	"version": "0.1.0",
+	"private": true,
+
+	"description": "Linting for dustjs templates",
+	"keywords": ["dust", "templates", "lint", "test"],
+
+	"author": "Nature Publishing Group",
+	"contributors": [
+		"Andrew Walker (http://www.moddular.org/)"
+	],
+
+	"engines": {
+		"node": ">=0.10"
+	},
+	"dependencies": {
+		"dustjs-linkedin": "~2.7",
+		"glob": "~5.0",
+		"yargs": "~3.25"
+	},
+	"devDependencies": {
+		"istanbul": "~0.3",
+		"jscs": "^2",
+		"jshint": "^2",
+		"mocha": "^2",
+		"mockery": "~1.4",
+		"proclaim": "^3",
+		"sinon": "^1"
+	},
+	"bin": {
+		"dustmite": "./bin/cli.js"
+	},
+	"main": "./lib/dustmite.js",
+
+	"scripts": {
+		"test": "make test"
+	}
+}
