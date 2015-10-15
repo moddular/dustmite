@@ -76,7 +76,7 @@ Validates that no escape characters other than `{~s}`, `{~r}`, `{~n}`, `{~lb}` a
 
 Validates that none of the blacklisted helpers are used in your templates.
 
-If this rule is enabled by setting to `true` it will prevent the use of the `@if` helper.
+If this rule is enabled by setting to `true` it will prevent the use of the `@if`, `@idx` and `@default` helpers.
 
 ### `helperMustBeInsideSection`
 
