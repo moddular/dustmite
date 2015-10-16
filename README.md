@@ -140,7 +140,7 @@ Dustmite will only run the default rules that are explicitly enabled in `.dustmi
 
 ## Custom rules
 
-In addtion to the default rules Dustmite allows you to provide a JavaScript file containing a list of custom rules to be applied for your project (using the `-r`/`--rules` option). This file should `module.exports` an array of rules objects.
+In addition to the default rules Dustmite allows you to provide a JavaScript file containing a list of custom rules to be applied for your project (using the `-r`/`--rules` option). This file should `module.exports` an array of rules objects.
 
 The objects in this array must have a `type` property to define the type of node the rule should be applied to (e.g. a helper or a conditional) and a `test` property defining a function to perform the validations. `type` must have one of the following values:
 
