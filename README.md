@@ -281,5 +281,5 @@ make ci
 
 ## License
 
-Dustmite is licensed under the [Lesser General Public License (LGPL-3.0)](LICENSE).
+Dustmite is licensed under the [Lesser General Public License (LGPL-3.0)](LICENSE).  
 Copyright &copy; 2015, Nature Publishing Group
