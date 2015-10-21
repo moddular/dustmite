@@ -108,6 +108,8 @@ Validates that the specified helpers must contain a body. e.g. `{@sep}Body{/sep}
 
 If this rule is enabled by setting to `true` it will apply to the `@first`, `@last` and `@sep` helpers.
 
+### `logicHelpersMustHaveKeyAndValue`
+
 ```js
 "logicHelpersMustHaveKeyAndValue": true|false|["list", "of", "helpers"]
 ```
