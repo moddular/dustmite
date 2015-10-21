@@ -431,4 +431,121 @@ describe('lib/rules', function() {
 			});
 		});
 	});
+
+	describe('logicHelpersMustHaveKeyAndValue', function() {
+		it('Should apply for helpers', function() {
+			assert.strictEqual(rules.logicHelpersMustHaveKeyAndValue.type, '@');
+		});
+
+		it('Should callback if a logic helper does not have a value parameter', function() {
+			var names = ['eq', 'ne', 'gt', 'lt', 'gte', 'lte'];
+			names.forEach(function(name) {
+				var callback = sinon.stub();
+				var node = {
+					name: sinon.stub().returns(name),
+					params: sinon.stub().returns(['key'])
+				};
+				rules.logicHelpersMustHaveKeyAndValue.test(callback, node);
+				assert.isTrue(callback.calledOnce, name + ' should be invalid if it has no value parameter for logicHelpersMustHaveKeyAndValue');
+			});
+		});
+
+		it('Should callback if a logic helper does not have a key parameter', function() {
+			var names = ['eq', 'ne', 'gt', 'lt', 'gte', 'lte'];
+			names.forEach(function(name) {
+				var callback = sinon.stub();
+				var node = {
+					name: sinon.stub().returns(name),
+					params: sinon.stub().returns(['value'])
+				};
+				rules.logicHelpersMustHaveKeyAndValue.test(callback, node);
+				assert.isTrue(callback.calledOnce, name + ' should be invalid if it has no key parameter for logicHelpersMustHaveKeyAndValue');
+			});
+		});
+
+		it('Should callback twice if a logic helper does not have a key or value parameter', function() {
+			var names = ['eq', 'ne', 'gt', 'lt', 'gte', 'lte'];
+			names.forEach(function(name) {
+				var callback = sinon.stub();
+				var node = {
+					name: sinon.stub().returns(name),
+					params: sinon.stub().returns([])
+				};
+				rules.logicHelpersMustHaveKeyAndValue.test(callback, node);
+				assert.isTrue(callback.calledTwice, name + ' should be invalid if it has no key or value parameter for logicHelpersMustHaveKeyAndValue');
+			});
+		});
+
+		it('Should not callback if a logic helper has both key and value parameters', function() {
+			var names = ['eq', 'ne', 'gt', 'lt', 'gte', 'lte'];
+			names.forEach(function(name) {
+				var callback = sinon.stub();
+				var node = {
+					name: sinon.stub().returns(name),
+					params: sinon.stub().returns(['key', 'value'])
+				};
+				rules.logicHelpersMustHaveKeyAndValue.test(callback, node);
+				assert.isTrue(callback.notCalled, name + ' should be valid if it has both key and value parameters for logicHelpersMustHaveKeyAndValue');
+			});
+		});
+
+		it('Should not callback if a logic helper has a value parameter and gets the key from an ancestor', function() {
+			var names = ['eq', 'ne', 'gt', 'lt', 'gte', 'lte'];
+			var parents = ['select', 'math'];
+			names.forEach(function(name) {
+				parents.forEach(function(parent) {
+					var callback = sinon.stub();
+					var node = {
+						name: sinon.stub().returns(name),
+						params: sinon.stub().returns(['value']),
+						stack: [
+							{
+								type: '@',
+								name: sinon.stub().returns(parent),
+								params: sinon.stub().returns(['key'])
+							}
+						]
+					};
+					rules.logicHelpersMustHaveKeyAndValue.test(callback, node);
+					assert.isTrue(callback.notCalled, name + ' should be valid if it has a value parameter with a key from an ancestor for logicHelpersMustHaveKeyAndValue');
+				});
+			});
+		});
+
+		it('Should callback if a logic helper has a value parameter but can\'t get the key from an ancestor', function() {
+			var names = ['eq', 'ne', 'gt', 'lt', 'gte', 'lte'];
+			var parents = ['select', 'math'];
+			names.forEach(function(name) {
+				parents.forEach(function(parent) {
+					var callback = sinon.stub();
+					var node = {
+						name: sinon.stub().returns(name),
+						params: sinon.stub().returns(['value']),
+						stack: [
+							{
+								type: '@',
+								name: sinon.stub().returns(parent),
+								params: sinon.stub().returns([])
+							}
+						]
+					};
+					rules.logicHelpersMustHaveKeyAndValue.test(callback, node);
+					assert.isTrue(callback.calledOnce, name + ' should be invalid if it has a value parameter but can\'t get a key from an ancestor for logicHelpersMustHaveKeyAndValue');
+				});
+			});
+		});
+
+		it('Should not callback if other helpers do not have key or value parameters', function() {
+			var names = ['foo', 'math'];
+			names.forEach(function(name) {
+				var callback = sinon.stub();
+				var node = {
+					name: sinon.stub().returns(name),
+					params: sinon.stub().returns([])
+				};
+				rules.logicHelpersMustHaveKeyAndValue.test(callback, node);
+				assert.isTrue(callback.notCalled, name + ' should be valid if it has no key or value parameter for logicHelpersMustHaveKeyAndValue');
+			});
+		});
+	});
 });

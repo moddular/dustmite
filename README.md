@@ -108,6 +108,14 @@ Validates that the specified helpers must contain a body. e.g. `{@sep}Body{/sep}
 
 If this rule is enabled by setting to `true` it will apply to the `@first`, `@last` and `@sep` helpers.
 
+```js
+"logicHelpersMustHaveKeyAndValue": true|false|["list", "of", "helpers"]
+```
+
+Validates that the specified helpers have a key and value, either as parameters or combined with a containing `@select` or `@math` helper. e.g. `{@eq key=foo value="bar"}{/eq}`, `{@select key=foo}{@eq value="bar"}{/eq}{/select}` or `{@math key=foo method="mod" operand="2"}{@eq value=0}{/eq}{/math}`.
+
+If this rule is enabled by setting to `true` it will apply to the `@eq`, `@ne`, `@gt`, `@lt`, `@gte` and `@lte` helpers.
+
 Putting these together, here's an example of a complete `.dustmiterc` file:
 
 ```js
@@ -132,7 +140,8 @@ Putting these together, here's an example of a complete `.dustmiterc` file:
 		"sep",
 		"first",
 		"last"
-	]
+	],
+	"logicHelpersMustHaveKeyAndValue": true
 }
 ```
 
