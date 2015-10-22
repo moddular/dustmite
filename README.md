@@ -22,7 +22,7 @@ When installed Dustmite creates a binary at `./node_modules/.bin/dustmite`. It c
 
 * `-p`, `--path` sets the path to lint, this can be a file or directory.
 * `-e`, `--extensions` sets the file extensions to search for if `-p` is a directory.
-* `-r`, `--rules` sets the path for a [custom rules file](#custom-rules).
+* `-r`, `--rules` sets the path for a [custom rules](#custom-rules) file.
 
 Run `./node_modules/.bin/dustmite -h` to get more details about the supported options.
 
