@@ -2,6 +2,9 @@
 
 Dustmite is a linter for [DustJS](https://github.com/linkedin/dustjs). It checks the syntax of your dust templates and then validates them against a configurable and extensible set of rules. The dust parsing is heavily inspired by [Swiffer.js](https://github.com/smfoote/Swiffer.js).
 
+[![LGPL-3.0 licensed][shield-license]][info-license]
+[![Node.js version support][shield-node]][info-node]
+
 ## Installation
 
 Install using `npm`:
@@ -292,5 +295,11 @@ make ci
 
 ## License
 
-Dustmite is licensed under the [Lesser General Public License (LGPL-3.0)](LICENSE).  
+Dustmite is licensed under the [Lesser General Public License (LGPL-3.0)][info-license].  
 Copyright &copy; 2015, Nature Publishing Group
+
+
+[info-license]: LICENSE
+[info-node]: package.json
+[shield-license]: https://img.shields.io/badge/license-LGPL%203.0-blue.svg
+[shield-node]: https://img.shields.io/badge/node.js%20support-0.10–4-brightgreen.svg
