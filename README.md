@@ -8,7 +8,7 @@ Dustmite is a linter for [DustJS](https://github.com/linkedin/dustjs). It checks
 
 ## Installation
 
-Install using `npm`:
+Install using [npm](https://www.npmjs.com):
 
 ```
 npm install dustmite
