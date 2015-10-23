@@ -6,6 +6,7 @@ Dustmite is a linter for [DustJS](https://github.com/linkedin/dustjs). It checks
 [![Node.js version support][shield-node]][info-node]
 [![NPM version][shield-npm]][info-npm]
 [![Build status][shield-build]][info-build]
+[![Code coverage][shield-coverage]][info-coverage]
 
 ![Susuwatari](https://38.media.tumblr.com/tumblr_mbt6bsseX31rn213no1_500.gif)
 
@@ -302,11 +303,12 @@ make ci
 Dustmite is licensed under the [Lesser General Public License (LGPL-3.0)][info-license].  
 Copyright &copy; 2015, Nature Publishing Group
 
-
+[info-coverage]: https://coveralls.io/github/nature/dustmite
 [info-license]: LICENSE
 [info-node]: package.json
 [info-npm]: https://www.npmjs.com/package/dustmite
 [info-build]: https://travis-ci.org/nature/dustmite
+[shield-coverage]: https://img.shields.io/coveralls/nature/dustmite.svg
 [shield-license]: https://img.shields.io/badge/license-LGPL%203.0-blue.svg
 [shield-node]: https://img.shields.io/badge/node.js%20support-0.10–4-brightgreen.svg
 [shield-npm]: https://img.shields.io/npm/v/dustmite.svg
