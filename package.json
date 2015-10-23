@@ -1,6 +1,7 @@
 {
 	"name": "dustmite",
 	"version": "0.2.0",
+	"license": "LGPL-3.0",
 
 	"description": "Linting for dustjs templates",
 	"keywords": ["dust", "templates", "lint", "test"],
@@ -9,6 +10,13 @@
 	"contributors": [
 		"Andrew Walker (http://www.moddular.org/)"
 	],
+
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/nature/dustmite.git"
+	},
+	"homepage": "https://github.com/nature/dustmite",
+	"bugs": "https://github.com/nature/dustmite/issues",
 
 	"engines": {
 		"node": ">=0.10"
