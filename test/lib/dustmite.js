@@ -2,6 +2,8 @@
 'use strict';
 
 var assert = require('proclaim');
+var sinon = require('sinon');
+var mockery = require('mockery');
 var path = require('path');
 
 var dustmite = require(path.join(__dirname, '..', '..', 'lib', 'dustmite'));
@@ -13,6 +15,15 @@ describe('lib/dustmite', function() {
 
 	it('Should return a function when dustmite is called', function() {
 		assert.isFunction(dustmite());
+	});
+
+	it('Should pass arguments through to `Validator`', function() {
+		var validator = sinon.stub().returns(sinon.stub());
+
+		mockery.registerMock('./validator', validator);
+
+		dustmite('foo', 'bar');
+		assert.isTrue(validator.calledWith('foo', 'bar'));
 	});
 
 	it('Should export a `Reporter` function', function() {

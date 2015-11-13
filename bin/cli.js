@@ -2,12 +2,11 @@
 
 'use strict';
 
-var Validator = require('../lib/validator')();
+var dustmite = require('../');
+var cli = dustmite.Cli;
+var Validator = dustmite();
 
-var fs = require('fs');
-var path = require('path');
 var yargs = require('yargs');
-var glob = require('glob');
 
 var args = yargs.options('r', {
 	alias: 'rules',
@@ -28,88 +27,8 @@ var args = yargs.options('r', {
 	return require('../package').version;
 }).argv;
 
-var getConfigFile = function(name) {
-	try {
-		return fs.readFileSync(path.join(process.cwd(), name), 'utf8');
-	} catch (e) {
-		return '';
-	}
-};
-
-var getFileList = function(args) {
-	var files = [];
-	var stat = null;
-	var ignore = getConfigFile('.dustmiteignore').split('\n').map(function(line) {
-		return line.replace(/^\s+/, '').replace(/\s+$/, '');
-	}).filter(function(line) {
-		return line.length > 0;
-	});
-
-	try {
-		stat = fs.lstatSync(args.path);
-	} catch (e) {
-		console.error(e.message);
-	}
-
-	if (stat) {
-		if (stat.isDirectory()) {
-			files = glob.sync(args.path + '/**/*.' + args.extensions);
-		} else if (stat.isFile()) {
-			files = [args.path];
-		}
-	}
-	return files.filter(function(file) {
-		for (var i = 0; ignore[i]; ++i) {
-			if (file.indexOf(ignore[i]) !== -1) {
-				return false;
-			}
-		}
-		return true;
-	}).map(function(file) {
-		return path.resolve(file);
-	});
-};
-
-var getRuleList = function(args) {
-	var defaults = require('../lib/rules');
-	var config = getConfigFile('.dustmiterc');
-	var rules = [];
-
-	if (args.rules) {
-		rules = require(path.resolve(args.rules));
-	}
-
-	if (config !== '') {
-		config = JSON.parse(config);
-
-		Object.keys(config).forEach(function(key) {
-			if (config[key] && defaults[key]) {
-				if (typeof config[key] !== 'boolean') {
-					defaults[key].meta = config[key];
-				}
-				rules.push(defaults[key]);
-			}
-		});
-	}
-	return rules;
-};
-
-var files = getFileList(args);
-var rules = getRuleList(args).reduce(function(acc, rule) {
-	if (!acc[rule.type]) {
-		acc[rule.type] = [];
-	}
-	acc[rule.type].push((rule.meta) ? {
-		test: rule.test,
-		meta: rule.meta
-	} : rule.test);
-	return acc;
-}, {});
-
-
-var validator = new Validator(files, rules);
+var validator = new Validator(cli.getFiles(args), cli.getRules(args));
 var status = validator.run();
-
-console.log(validator.report());
+validator.log();
 
 process.exit(status);
