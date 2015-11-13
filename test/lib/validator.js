@@ -6,27 +6,21 @@ var mockery = require('mockery');
 var path = require('path');
 var sinon = require('sinon');
 
-var createValidator = require(path.join(__dirname, '..', '..', 'lib', 'validator'));
+var modulePath = path.join(__dirname, '..', '..', 'lib', 'validator');
 
 describe('lib/validator', function() {
-	var Validator;
+	var logger;
 	var fs;
+	var Validator;
 
-	before(function() {
-		fs = {
-			readFileSync: sinon.stub()
-		};
-		mockery.enable({
-			useCleanCache: true,
-			warnOnUnregistered: false,
-			warnOnReplace: false
-		});
+	beforeEach(function() {
+		fs = require('../mock/fs');
+		logger = require('../mock/logger');
+
 		mockery.registerMock('fs', fs);
-		Validator = createValidator();
-	});
-	after(function() {
-		mockery.deregisterAll();
-		mockery.disable();
+		mockery.registerMock('./logger', logger);
+
+		Validator = require(modulePath)();
 	});
 
 	describe('read', function() {
@@ -50,7 +44,7 @@ describe('lib/validator', function() {
 		});
 
 		it('Should trigger reference validations when it encounters a reference in the template', function() {
-			var validator = new Validator(['valid.dust'], rules, sinon.stub());
+			var validator = new Validator(['valid.dust'], rules);
 			fs.readFileSync.withArgs('valid.dust').returns('{foo}');
 			validator.validate(0, 'valid.dust');
 			assert.isTrue(rules.reference[0].calledOnce);
@@ -58,7 +52,7 @@ describe('lib/validator', function() {
 		});
 
 		it('Should trigger special validations when it encounters as special character in the template', function() {
-			var validator = new Validator(['valid.dust'], rules, sinon.stub());
+			var validator = new Validator(['valid.dust'], rules);
 			fs.readFileSync.withArgs('valid.dust').returns('{~s}');
 			validator.validate(0, 'valid.dust');
 			assert.isTrue(rules.reference[0].notCalled);
@@ -66,14 +60,14 @@ describe('lib/validator', function() {
 		});
 
 		it('Should return 0 if there was no error', function() {
-			var validator = new Validator(['valid.dust'], rules, sinon.stub());
+			var validator = new Validator(['valid.dust'], rules);
 			fs.readFileSync.withArgs('valid.dust').returns('{~s}');
 			var result = validator.validate(0, 'valid.dust');
 			assert.strictEqual(result, 0);
 		});
 
 		it('Should return 1 if there was an error', function() {
-			var validator = new Validator(['invalid.dust'], rules, sinon.stub());
+			var validator = new Validator(['invalid.dust'], rules);
 			fs.readFileSync.withArgs('invalid.dust').returns('{~foo}');
 			rules.special[0].callsArg(0);
 			var result = validator.validate(0, 'invalid.dust');
@@ -81,14 +75,14 @@ describe('lib/validator', function() {
 		});
 
 		it('Should track the error state in it\'s first parameter', function() {
-			var validator = new Validator(['valid.dust'], rules, sinon.stub());
+			var validator = new Validator(['valid.dust'], rules);
 			fs.readFileSync.withArgs('valid.dust').returns('{~s}');
 			var result = validator.validate(1, 'valid.dust');
 			assert.strictEqual(result, 1);
 		});
 
 		it('Should count the total errors', function() {
-			var validator = new Validator(['invalid.dust'], rules, sinon.stub());
+			var validator = new Validator(['invalid.dust'], rules);
 			fs.readFileSync.withArgs('invalid.dust').returns('{~foo}{_bar}');
 			rules.special[0].callsArg(0);
 			rules.reference[0].callsArg(0);
@@ -98,7 +92,7 @@ describe('lib/validator', function() {
 		});
 
 		it('Should count the files validated', function() {
-			var validator = new Validator(['valid1.dust', 'valid2.dust'], rules, sinon.stub());
+			var validator = new Validator(['valid1.dust', 'valid2.dust'], rules);
 			fs.readFileSync.withArgs('valid1.dust').returns('{foo}');
 			fs.readFileSync.withArgs('valid2.dust').returns('{~s}');
 			assert.strictEqual(validator.tested, 0);
@@ -109,42 +103,50 @@ describe('lib/validator', function() {
 		});
 
 		it('Should not print a report if there were no errors', function() {
-			var log = sinon.stub();
-			var validator = new Validator(['valid.dust'], rules, log);
+			var validator = new Validator(['valid.dust'], rules);
 			fs.readFileSync.withArgs('valid.dust').returns('{foo}');
 			validator.validate(0, 'valid.dust');
-			assert.isTrue(log.notCalled);
+			assert.isTrue(logger.get().log.notCalled);
 		});
 
 		it('Should print a report if there were errors', function() {
-			var log = sinon.stub();
-			var validator = new Validator(['invalid.dust'], rules, log);
+			var validator = new Validator(['invalid.dust'], rules);
 			fs.readFileSync.withArgs('invalid.dust').returns('{~foo}');
 			rules.special[0].callsArg(0);
 			validator.validate(0, 'invalid.dust');
-			assert.isTrue(log.calledOnce);
+			assert.isTrue(logger.get().log.calledOnce);
 		});
 	});
 
 	describe('report', function() {
 		it('Should report no files processed and no errors before validation has run', function() {
-			var validator = new Validator(['invalid.dust'], {}, sinon.stub());
+			var validator = new Validator(['invalid.dust'], {});
 			fs.readFileSync.withArgs('invalid.dust').returns('{#foo}foo{foo}');
 			assert.include(validator.report(), '0 files tested, 0 errors found');
 		});
 
 		it('Should report the number of files processed and the error count after validation has run and found errors', function() {
-			var validator = new Validator(['invalid.dust'], {}, sinon.stub());
+			var validator = new Validator(['invalid.dust'], {});
 			fs.readFileSync.withArgs('invalid.dust').returns('{#foo}foo{foo}');
 			validator.run();
 			assert.include(validator.report(), '1 files tested, 1 errors found');
 		});
 
 		it('Should report the number of files processed and a zero error count after validation has run and found no errors', function() {
-			var validator = new Validator(['valid.dust'], {}, sinon.stub());
+			var validator = new Validator(['valid.dust'], {});
 			fs.readFileSync.withArgs('valid.dust').returns('{#foo}foo{/foo}');
 			validator.run();
 			assert.include(validator.report(), '1 files tested, 0 errors found');
+		});
+	});
+
+	describe('log', function() {
+		it('Should log the output of `report`', function() {
+			var validator = new Validator(['invalid.dust'], {});
+			fs.readFileSync.withArgs('invalid.dust').returns('{#foo}foo{foo}');
+			validator.run();
+			validator.log();
+			assert.isTrue(logger.get().log.calledWith(validator.report()));
 		});
 	});
 

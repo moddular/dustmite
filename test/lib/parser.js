@@ -10,6 +10,12 @@ var Node = require(path.join(__dirname, '..', '..', 'lib', 'node'));
 var Reporter = require(path.join(__dirname, '..', 'mock', 'reporter'));
 
 describe('lib/parser', function() {
+	var parser;
+
+	beforeEach(function() {
+		parser = new Parser();
+	});
+
 	describe('parse', function() {
 		var reporter;
 
@@ -21,7 +27,6 @@ describe('lib/parser', function() {
 		});
 
 		it('Should catch dust syntax errors', function() {
-			var parser = new Parser();
 			var step = sinon.stub(parser, 'step');
 
 			assert.doesNotThrow(function() {
@@ -33,7 +38,6 @@ describe('lib/parser', function() {
 		});
 
 		it('Should step into the AST if there are no syntax errors', function() {
-			var parser = new Parser();
 			var step = sinon.stub(parser, 'step');
 
 			assert.doesNotThrow(function() {
@@ -57,7 +61,6 @@ describe('lib/parser', function() {
 		});
 
 		it('Should walk all but the last two nodes in the current level of the AST when it encounters a `body` node', function() {
-			var parser = new Parser();
 			var walk = sinon.stub(parser, 'walk');
 			var node = ['body'];
 
@@ -70,7 +73,6 @@ describe('lib/parser', function() {
 		});
 
 		it('Should walk all nodes in the current level of the AST when it encounters a `bodies` node', function() {
-			var parser = new Parser();
 			var walk = sinon.stub(parser, 'walk');
 			var node = ['bodies'];
 
@@ -82,7 +84,6 @@ describe('lib/parser', function() {
 		});
 
 		it('Should notify clients when it encounters a `?` node and step into the children', function() {
-			var parser = new Parser();
 			var notify = sinon.stub(parser, 'notify');
 			var step = sinon.spy(parser, 'step');
 			var child = ['test'];
@@ -100,7 +101,6 @@ describe('lib/parser', function() {
 		});
 
 		it('Should notify clients when it encounters a `#` node and step into the children', function() {
-			var parser = new Parser();
 			var notify = sinon.stub(parser, 'notify');
 			var step = sinon.spy(parser, 'step');
 			var child = ['test'];
@@ -118,7 +118,6 @@ describe('lib/parser', function() {
 		});
 
 		it('Should notify clients when it encounters a `^` node and step into the children', function() {
-			var parser = new Parser();
 			var notify = sinon.stub(parser, 'notify');
 			var step = sinon.spy(parser, 'step');
 			var child = ['test'];
@@ -136,7 +135,6 @@ describe('lib/parser', function() {
 		});
 
 		it('Should notify clients when it encounters an `@` node and step into the children', function() {
-			var parser = new Parser();
 			var notify = sinon.stub(parser, 'notify');
 			var step = sinon.spy(parser, 'step');
 			var child = ['test'];
@@ -154,7 +152,6 @@ describe('lib/parser', function() {
 		});
 
 		it('Should notify clients when it encounters a `<` node and step into the children', function() {
-			var parser = new Parser();
 			var notify = sinon.stub(parser, 'notify');
 			var step = sinon.spy(parser, 'step');
 			var child = ['test'];
@@ -172,7 +169,6 @@ describe('lib/parser', function() {
 		});
 
 		it('Should notify clients when it encounters a `partial` node and step into the children', function() {
-			var parser = new Parser();
 			var notify = sinon.stub(parser, 'notify');
 			var step = sinon.spy(parser, 'step');
 			var child = ['test'];
@@ -190,7 +186,6 @@ describe('lib/parser', function() {
 		});
 
 		it('Should notify clients when it encounters a `%` node', function() {
-			var parser = new Parser();
 			var notify = sinon.stub(parser, 'notify');
 			var step = sinon.spy(parser, 'step');
 			var node = ['%'];
@@ -204,7 +199,6 @@ describe('lib/parser', function() {
 		});
 
 		it('Should notify clients when it encounters a `comment` node', function() {
-			var parser = new Parser();
 			var notify = sinon.stub(parser, 'notify');
 			var step = sinon.spy(parser, 'step');
 			var node = ['comment'];
@@ -218,7 +212,6 @@ describe('lib/parser', function() {
 		});
 
 		it('Should notify clients when it encounters a `reference` node', function() {
-			var parser = new Parser();
 			var notify = sinon.stub(parser, 'notify');
 			var step = sinon.spy(parser, 'step');
 			var node = ['reference'];
@@ -232,7 +225,6 @@ describe('lib/parser', function() {
 		});
 
 		it('Should notify clients when it encounters a `special` node', function() {
-			var parser = new Parser();
 			var notify = sinon.stub(parser, 'notify');
 			var step = sinon.spy(parser, 'step');
 			var node = ['special'];
@@ -246,7 +238,6 @@ describe('lib/parser', function() {
 		});
 
 		it('Should step into the child branches when it encounters a `param` node', function() {
-			var parser = new Parser();
 			var notify = sinon.stub(parser, 'notify');
 			var step = sinon.spy(parser, 'step');
 			var branch1 = ['test 1'];
@@ -265,7 +256,6 @@ describe('lib/parser', function() {
 
 	describe('walk', function() {
 		it('Should walk all but the first top level nodes by default', function() {
-			var parser = new Parser();
 			var step = sinon.stub(parser, 'step');
 			var nodes = ['node 1', 'node 2', 'node 3'];
 			var stack = [];
@@ -278,7 +268,6 @@ describe('lib/parser', function() {
 		});
 
 		it('Should allow an `endOffset` config option to control where the iteration stops', function() {
-			var parser = new Parser();
 			var step = sinon.stub(parser, 'step');
 			var nodes = ['node 1', 'node 2', 'node 3'];
 			var stack = [];
@@ -291,7 +280,6 @@ describe('lib/parser', function() {
 		});
 
 		it('Should allow a `startOffset` config option to control where the iteration starts', function() {
-			var parser = new Parser();
 			var step = sinon.stub(parser, 'step');
 			var nodes = ['node 1', 'node 2', 'node 3'];
 			var stack = [];
@@ -306,7 +294,6 @@ describe('lib/parser', function() {
 
 	describe('notify', function() {
 		it('Should emit a `node` event with a `Node` object and the raw node from the AST', function() {
-			var parser = new Parser();
 			var emit = sinon.stub(parser, 'emit');
 			var node = ['test'];
 			var stack = [];
