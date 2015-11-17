@@ -9,8 +9,24 @@ var rules = require(path.join(__dirname, '..', '..', 'lib', 'rules'));
 
 describe('lib/rules', function() {
 	describe('referencesMustBeSnakeCase', function() {
+		it('Should specify the type as an array', function() {
+			assert.isArray(rules.referencesMustBeSnakeCase.type);
+		});
+
 		it('Should apply for references', function() {
-			assert.strictEqual(rules.referencesMustBeSnakeCase.type, 'reference');
+			assert.include(rules.referencesMustBeSnakeCase.type, 'reference');
+		});
+
+		it('Should apply for conditionals', function() {
+			assert.include(rules.referencesMustBeSnakeCase.type, '?');
+		});
+
+		it('Should apply for negative conditionals', function() {
+			assert.include(rules.referencesMustBeSnakeCase.type, '^');
+		});
+
+		it('Should apply for sections', function() {
+			assert.include(rules.referencesMustBeSnakeCase.type, '#');
 		});
 
 		it('Should callback if the name of the node being tested does not satisfy the criteria', function() {
@@ -37,8 +53,24 @@ describe('lib/rules', function() {
 	});
 
 	describe('referencesMustBeCamelCase', function() {
+		it('Should specify the type as an array', function() {
+			assert.isArray(rules.referencesMustBeCamelCase.type);
+		});
+
 		it('Should apply for references', function() {
-			assert.strictEqual(rules.referencesMustBeCamelCase.type, 'reference');
+			assert.include(rules.referencesMustBeCamelCase.type, 'reference');
+		});
+
+		it('Should apply for conditionals', function() {
+			assert.include(rules.referencesMustBeCamelCase.type, '?');
+		});
+
+		it('Should apply for negative conditionals', function() {
+			assert.include(rules.referencesMustBeCamelCase.type, '^');
+		});
+
+		it('Should apply for sections', function() {
+			assert.include(rules.referencesMustBeCamelCase.type, '#');
 		});
 
 		it('Should callback if the name of the node being tested does not satisfy the criteria', function() {

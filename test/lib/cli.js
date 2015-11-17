@@ -311,5 +311,65 @@ describe('cli', function() {
 			assert.strictEqual(rules['@'].length, 1);
 			assert.strictEqual(rules['@'][0], defaultRules.helperRule.test);
 		});
+
+		it('Should allow rules to apply to multiple types of node', function() {
+			customRules = [
+				{
+					type: ['reference', '#'],
+					test: function() { }
+				},
+				{
+					type: 'reference',
+					test: function() { },
+					meta: 'foo'
+				},
+				{
+					type: '?',
+					test: function() { }
+				}
+			];
+
+			defaultRules = {
+				someRule: {
+					type: 'reference',
+					test: function() { }
+				},
+				someOtherRule: {
+					type: ['reference', '^'],
+					test: function() { }
+				},
+				helperRule: {
+					type: '@',
+					test: function() { }
+				}
+			};
+			mockery.registerMock('custom-rules', customRules);
+			mockery.registerMock('./rules', defaultRules);
+
+			fs.readFileSync.withArgs('.dustmiterc').returns('{"someRule": true, "someOtherRule": true, "helperRule": true}');
+			path.resolve.returnsArg(0);
+
+			var rules = cli.getRules({rules: 'custom-rules'});
+			assert.isObject(rules);
+			assert.isArray(rules.reference);
+			assert.strictEqual(rules.reference.length, 4);
+			assert.strictEqual(rules.reference[0], customRules[0].test);
+			assert.strictEqual(rules.reference[1].meta, customRules[1].meta);
+			assert.strictEqual(rules.reference[1].test, customRules[1].test);
+			assert.strictEqual(rules.reference[2], defaultRules.someRule.test);
+			assert.strictEqual(rules.reference[3], defaultRules.someOtherRule.test);
+			assert.isArray(rules['?']);
+			assert.strictEqual(rules['?'].length, 1);
+			assert.strictEqual(rules['?'][0], customRules[2].test);
+			assert.isArray(rules['@']);
+			assert.strictEqual(rules['@'].length, 1);
+			assert.strictEqual(rules['@'][0], defaultRules.helperRule.test);
+			assert.isArray(rules['#']);
+			assert.strictEqual(rules['#'].length, 1);
+			assert.strictEqual(rules['#'][0], customRules[0].test);
+			assert.isArray(rules['^']);
+			assert.strictEqual(rules['^'].length, 1);
+			assert.strictEqual(rules['^'][0], defaultRules.someOtherRule.test);
+		});
 	});
 });
