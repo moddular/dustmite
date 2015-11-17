@@ -42,7 +42,7 @@ Dustmite comes packaged with a few default rules that can be configured by placi
 "referencesMustBeSnakeCase": true|false
 ```
 
-Validates that all references in your templates are written in snake_case.
+Validates that all references in your templates are written in snake_case. This could be when printing the reference `{foo_bar}`, referencing it as a section using `{#foo_bar}{/foo_bar}` or when testing it in a conditional with `{?foo_bar}{/foo_bar}` or `{^foo_bar}{/foo_bar}`.
 
 ### `referencesMustBeCamelCase`
 
@@ -50,7 +50,7 @@ Validates that all references in your templates are written in snake_case.
 "referencesMustBeCamelCase": true|false
 ```
 
-Validates that all references in your templates are written in camelCase.
+Validates that all references in your templates are written in camelCase. This could be when printing the reference `{fooBar}`, referencing it as a section using `{#fooBar}{/fooBar}` or when testing it in a conditional with `{?fooBar}{/fooBar}` or `{^fooBar}{/fooBar}`.
 
 ### `helpersMustBeSnakeCase`
 
@@ -58,7 +58,7 @@ Validates that all references in your templates are written in camelCase.
 "helpersMustBeSnakeCase": true|false
 ```
 
-Validates that all helpers in your templates are written in snake_case.
+Validates that all helpers in your templates are written in snake_case. For example `{@foo_bar/}`.
 
 ### `helpersMustBeCamelCase`
 
@@ -66,7 +66,7 @@ Validates that all helpers in your templates are written in snake_case.
 "helpersMustBeCamelCase": true|false
 ```
 
-Validates that all helpers in your templates are written in camelCase.
+Validates that all helpers in your templates are written in camelCase. For example `{@fooBar/}`.
 
 ### `escapeCharactersMustBeValid`
 
@@ -173,6 +173,12 @@ The objects in this array must have a `type` property to define the type of node
 * `reference`
 * `special`
 * `comment`
+
+If you would like your rule to be applied to serveral different node types, the `type` can also be an array, like this:
+
+```js
+type: ['?', '^']
+```
 
 The `test` function will be called each time the Dustmite parser encounters a node of the relevant type in your templates. It should have the following signature:
 
